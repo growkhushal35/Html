@@ -1,14 +1,54 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./Css/mainstyle.css">
-  </head>
-  <body>
-    <div class="container">
-      <img src="./Images/background.png" alt="Snow" style="width: 100%;" />
-      <img class="top-left" src="./Images/Herbal Care.png" alt="">
-      <h1 class="heading1">Herbal Care</h1>
-    </div>
-  </body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #message {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Number Guessing Game</h1>
+    <p id="message">Guess a number between 1 and 100</p>
+    <input type="number" id="guess">
+    <button onclick="checkGuess()">Submit Guess</button>
+
+    <script>
+        // Generate a random number between 1 and 100
+        const randomNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        function checkGuess() {
+            const guess = document.getElementById("guess").value;
+            const message = document.getElementById("message");
+            attempts++;
+
+            if (guess < 1 || guess > 100 || isNaN(guess)) {
+                message.textContent = "Please enter a valid number between 1 and 100.";
+            } else {
+                if (guess < randomNumber) {
+                    message.textContent = "Too low! Try again.";
+                } else if (guess > randomNumber) {
+                    message.textContent = "Too high! Try again.";
+                } else {
+                    message.textContent = `Congratulations! You guessed the correct number ${randomNumber} in ${attempts} attempts.`;
+                    document.getElementById("guess").setAttribute("disabled", "true");
+                    document.querySelector("button").setAttribute("disabled", "true");
+                }
+            }
+        }
+    </script>
+</body>
+
 </html>
