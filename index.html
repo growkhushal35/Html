@@ -4,43 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snowfall Game</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .snowflake {
-            position: absolute;
-            background: #fff;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-    </style>
+    <title>Rock Paper Scissors Game</title>
 </head>
 
 <body>
+    <h1>Rock Paper Scissors Game</h1>
+    <button onclick="playGame('rock')">Rock</button>
+    <button onclick="playGame('paper')">Paper</button>
+    <button onclick="playGame('scissors')">Scissors</button>
+    <p id="result"></p>
+
     <script>
-        function createSnowflake() {
-            const snowflake = document.createElement("div");
-            snowflake.className = "snowflake";
-            snowflake.style.left = Math.random() * window.innerWidth + "px";
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
-            snowflake.style.opacity = Math.random();
-            snowflake.style.fontSize = Math.random() * 10 + "px";
+        function playGame(playerChoice) {
+            const choices = ["rock", "paper", "scissors"];
+            const randomIndex = Math.floor(Math.random() * 3);
+            const computerChoice = choices[randomIndex];
 
-            snowflake.innerHTML = "❄️";
-            document.body.appendChild(snowflake);
-
-            setTimeout(() => {
-                snowflake.remove();
-            }, 5000);
+            if (playerChoice === computerChoice) {
+                document.getElementById("result").innerHTML = "It's a draw!";
+            } else if (
+                (playerChoice === "rock" && computerChoice === "scissors") ||
+                (playerChoice === "paper" && computerChoice === "rock") ||
+                (playerChoice === "scissors" && computerChoice === "paper")
+            ) {
+                document.getElementById("result").innerHTML = `You win! Computer chose ${computerChoice}.`;
+            } else {
+                document.getElementById("result").innerHTML = `You lose! Computer chose ${computerChoice}.`;
+            }
         }
-
-        setInterval(createSnowflake, 100);
     </script>
 </body>
 
