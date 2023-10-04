@@ -5,31 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .choice-img {
+            width: 100px;
+            height: 100px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Rock Paper Scissors Game</h1>
-    <button onclick="playGame('rock')">Rock</button>
-    <button onclick="playGame('paper')">Paper</button>
-    <button onclick="playGame('scissors')">Scissors</button>
-    <p id="result"></p>
+    <div class="button-container">
+        <button class="button" onclick="playGame('rock')">Rock</button>
+        <button class="button" onclick="playGame('paper')">Paper</button>
+        <button class="button" onclick="playGame('scissors')">Scissors</button>
+    </div>
+    <img class="choice-img" id="player-choice-img" src="" alt="Player Choice">
+    <img class="choice-img" id="computer-choice-img" src="" alt="Computer Choice">
+    <p class="result" id="result"></p>
 
     <script>
         function playGame(playerChoice) {
             const choices = ["rock", "paper", "scissors"];
             const randomIndex = Math.floor(Math.random() * 3);
             const computerChoice = choices[randomIndex];
+            const resultDisplay = document.getElementById("result");
+            const playerChoiceImg = document.getElementById("player-choice-img");
+            const computerChoiceImg = document.getElementById("computer-choice-img");
+
+            playerChoiceImg.src = `${playerChoice}.png`;
+            computerChoiceImg.src = `${computerChoice}.png`;
 
             if (playerChoice === computerChoice) {
-                document.getElementById("result").innerHTML = "It's a draw!";
+                resultDisplay.textContent = "It's a draw!";
             } else if (
                 (playerChoice === "rock" && computerChoice === "scissors") ||
                 (playerChoice === "paper" && computerChoice === "rock") ||
                 (playerChoice === "scissors" && computerChoice === "paper")
             ) {
-                document.getElementById("result").innerHTML = `You win! Computer chose ${computerChoice}.`;
+                resultDisplay.textContent = `You win! Computer chose ${computerChoice}.`;
             } else {
-                document.getElementById("result").innerHTML = `You lose! Computer chose ${computerChoice}.`;
+                resultDisplay.textContent = `You lose! Computer chose ${computerChoice}.`;
             }
         }
     </script>
