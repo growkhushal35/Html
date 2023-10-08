@@ -1,27 +1,36 @@
-const boardSize = 10;
-const board = document.querySelector('.board');
+document.addEventListener('DOMContentLoaded', function () {
+    const taskList = document.getElementById('taskList');
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
 
-function createBoard() {
-    for (let i = 0; i < boardSize; i++) {
-        for (let j = 0; j < boardSize; j++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.dataset.row = i;
-            cell.dataset.col = j;
-            board.appendChild(cell);
-        }
+    // Function to add a new task to the list
+    function addTask() {
+        const taskText = taskInput.value.trim();
+        if (taskText === '') return;
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${taskText}</span>
+            <button class="delete-button">Delete</button>
+        `;
+
+        // Add event listener to delete button
+        const deleteButton = li.querySelector('.delete-button');
+        deleteButton.addEventListener('click', function () {
+            taskList.removeChild(li);
+        });
+
+        taskList.appendChild(li);
+        taskInput.value = '';
     }
-}
 
-createBoard();
+    // Event listener for adding a task
+    addTaskBtn.addEventListener('click', addTask);
 
-const cells = document.querySelectorAll('.cell');
-
-cells.forEach(cell => {
-    cell.addEventListener('click', () => {
-        const row = cell.dataset.row;
-        const col = cell.dataset.col;
-        // Implement your game logic based on the clicked cell (row, col)
-        console.log(`Clicked cell at Row: ${row}, Col: ${col}`);
+    // Event listener for adding a task when Enter key is pressed
+    taskInput.addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+            addTask();
+        }
     });
 });
