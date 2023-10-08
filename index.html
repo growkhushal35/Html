@@ -104,42 +104,91 @@ li:hover {
         </ul>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener('DOMContentLoaded', function () {
     const taskList = document.getElementById('taskList');
-    const taskInput = document.getElementById('taskInput');
-    const addTaskBtn = document.getElementById('addTaskBtn');
 
-    // Function to add a new task to the list
-    function addTask() {
-        const taskText = taskInput.value.trim();
-        if (taskText === '') return;
+    // Function to fetch tasks from the server and render them on the page
+    function fetchTasks() {
+        fetch('/api/tasks')
+            .then(response => response.json())
+            .then(tasks => {
+                // Clear existing tasks
+                taskList.innerHTML = '';
 
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span>${taskText}</span>
-            <button class="delete-button">Delete</button>
-        `;
+                // Add tasks from the server to the task list
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${task.text}</span>
+                        <button class="delete-button" data-id="${task.id}">Delete</button>
+                    `;
 
-        // Add event listener to delete button
-        const deleteButton = li.querySelector('.delete-button');
-        deleteButton.addEventListener('click', function () {
-            taskList.removeChild(li);
-        });
+                    // Add event listener to delete button
+                    const deleteButton = li.querySelector('.delete-button');
+                    deleteButton.addEventListener('click', function () {
+                        const taskId = deleteButton.getAttribute('data-id');
+                        deleteTask(taskId);
+                    });
 
-        taskList.appendChild(li);
-        taskInput.value = '';
+                    taskList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error:', error));
     }
 
-    // Event listener for adding a task
-    addTaskBtn.addEventListener('click', addTask);
+    // Function to add a new task to the server
+    function addTask(taskText) {
+        fetch('/api/tasks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ taskText }),
+        })
+        .then(response => response.json())
+        .then(task => {
+            fetchTasks(); // Fetch and render updated tasks after adding a new task
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
-    // Event listener for adding a task when Enter key is pressed
-    taskInput.addEventListener('keyup', function (event) {
-        if (event.key === 'Enter') {
-            addTask();
+    // Function to delete a task from the server
+    function deleteTask(taskId) {
+        fetch(`/api/tasks/${taskId}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            fetchTasks(); // Fetch and render updated tasks after deleting a task
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Event listener for adding a task when clicking the button
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    addTaskBtn.addEventListener('click', function () {
+        const taskText = document.getElementById('taskInput').value.trim();
+        if (taskText !== '') {
+            addTask(taskText);
         }
     });
+
+    // Event listener for adding a task when Enter key is pressed
+    const taskInput = document.getElementById('taskInput');
+    taskInput.addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+            const taskText = taskInput.value.trim();
+            if (taskText !== '') {
+                addTask(taskText);
+            }
+        }
+    });
+
+    // Fetch and render tasks when the page loads
+    fetchTasks();
 });
+
     </script>
+
 </body>
 </html>
